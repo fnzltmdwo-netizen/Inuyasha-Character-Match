@@ -23,6 +23,9 @@ body {
 }
 
 .page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   min-height: 100vh;
   padding: 34px 46px 26px;
   position: relative;
@@ -31,7 +34,7 @@ body {
 .page::before {
   content: "";
   position: fixed;
-  inset: 0;
+  inset: 0;f
   pointer-events: none;
   background:
     radial-gradient(circle at 12% 22%, rgba(255,255,255,0.55), transparent 18%),

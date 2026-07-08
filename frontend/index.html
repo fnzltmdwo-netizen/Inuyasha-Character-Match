@@ -48,7 +48,15 @@
 
     <section class="main-panel">
       <div class="panel-pattern"></div>
-
+      <div class="nickname-box">
+  <label for="nicknameInput">닉네임 (선택)</label>
+  <input
+    type="text"
+    id="nicknameInput"
+    placeholder="예) 승민"
+    maxlength="12"
+  />
+</div>
       <div class="upload-card" id="uploadArea">
         <input type="file" id="imageInput" accept="image/*" hidden />
 
@@ -123,7 +131,13 @@
     <section id="resultSection" class="result-section hidden">
       <h2>당신과 닮은 이누야샤 캐릭터 TOP 3</h2>
       <div id="resultCards" class="result-cards"></div>
-      <button id="retryBtn" class="retry-btn">다시 테스트하기</button>
+      <div class="result-buttons">
+    <button id="retryBtn" class="retry-btn">🔄 다시 테스트</button>
+
+    <button id="shareBtn" class="share-btn">
+        💛 카카오 공유
+    </button>
+</div>
     </section>
 
     <footer>
@@ -131,7 +145,7 @@
     </footer>
 
   </main>
-
+  <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

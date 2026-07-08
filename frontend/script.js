@@ -1,4 +1,9 @@
+let latestResult = null;
 const API_URL = "https://inuyasha-character-match.onrender.com/match";
+const KAKAO_JS_KEY = "6836611108bd203324616c805a76abdf";
+
+Kakao.init(KAKAO_JS_KEY);
+
 
 const imageInput = document.getElementById("imageInput");
 const uploadArea = document.getElementById("uploadArea");
@@ -10,6 +15,7 @@ const loadingSection = document.getElementById("loadingSection");
 const resultSection = document.getElementById("resultSection");
 const resultCards = document.getElementById("resultCards");
 const retryBtn = document.getElementById("retryBtn");
+const nicknameInput = document.getElementById("nicknameInput");
 
 let selectedBase64 = "";
 
@@ -50,6 +56,7 @@ analyzeBtn.addEventListener("click", async () => {
   loadingSection.classList.remove("hidden");
   resultSection.classList.add("hidden");
   resultCards.innerHTML = "";
+  latestResult = results[0];
 
   analyzeBtn.disabled = true;
   analyzeBtn.querySelector("strong").innerText = "분석중...";
@@ -149,6 +156,16 @@ function renderResults(results) {
 
     resultCards.appendChild(card);
   });
+  
+  const title = resultSection.querySelector("h2");
+
+  const nickname = nicknameInput.value.trim();
+
+   if (nickname) {
+    title.innerText = `🎉 ${nickname}님의 이누야샤 캐릭터 TOP 3`;
+   } else {
+    title.innerText = "당신과 닮은 이누야샤 캐릭터 TOP 3";
+}
 
   resultSection.classList.remove("hidden");
   resultSection.scrollIntoView({
@@ -200,4 +217,64 @@ retryBtn.addEventListener("click", () => {
     top: 0,
     behavior: "smooth"
   });
+});
+const shareBtn = document.getElementById("shareBtn");
+
+shareBtn.addEventListener("click", () => {
+
+    if (!latestResult) {
+        alert("먼저 테스트를 진행해주세요!");
+        return;
+    }
+
+    const nickname = nicknameInput.value.trim() || "당신";
+
+    Kakao.Share.sendDefault({
+
+        objectType: "feed",
+
+        content: {
+
+            title: `🎉 ${nickname}님의 이누야샤 닮은꼴 결과`,
+
+            description:
+                `🥇 ${latestResult.name} (${latestResult.percent}% 일치)\n\n나도 테스트해보기!`,
+
+            imageUrl:
+                latestResult.image_url,
+
+            link: {
+
+                mobileWebUrl:
+                    "https://inuyasha-character-match-1.onrender.com",
+
+                webUrl:
+                    "https://inuyasha-character-match-1.onrender.com",
+
+            },
+
+        },
+
+        buttons: [
+
+            {
+
+                title: "나도 테스트하기",
+
+                link: {
+
+                    mobileWebUrl:
+                        "https://inuyasha-character-match-1.onrender.com",
+
+                    webUrl:
+                        "https://inuyasha-character-match-1.onrender.com",
+
+                },
+
+            },
+
+        ],
+
+    });
+
 });
