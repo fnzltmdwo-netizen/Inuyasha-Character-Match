@@ -222,46 +222,28 @@ retryBtn.addEventListener("click", () => {
 });
 
 if (shareBtn) {
-  shareBtn.addEventListener("click", () => {
-    if (!latestResult) {
+  shareBtn.addEventListener("click", async () => {
+    const nickname = nicknameInput.value.trim() || "나";
+
+    const resultNames = [...document.querySelectorAll(".result-card h3")]
+      .map((el) => el.innerText);
+
+    if (resultNames.length < 3) {
       alert("먼저 테스트를 진행해주세요!");
       return;
     }
 
-    if (!window.Kakao || !Kakao.isInitialized()) {
-      alert("카카오 공유 준비가 안 됐어요!");
-      return;
-    }
+    const imagePath = latestResult?.image_url || "inuyasha.png";
 
-    const nickname = nicknameInput.value.trim() || "당신";
-    const resultName = latestResult.name || "이누야샤 캐릭터";
-    const resultPercent = getPercentNumber(latestResult.percent || 90);
+    const shareUrl =
+      `https://inuyasha-character-match.onrender.com/share` +
+      `?name=${encodeURIComponent(nickname)}` +
+      `&r1=${encodeURIComponent(resultNames[0])}` +
+      `&r2=${encodeURIComponent(resultNames[1])}` +
+      `&r3=${encodeURIComponent(resultNames[2])}` +
+      `&img=${encodeURIComponent(imagePath)}`;
 
-    const rawImagePath = String(latestResult.image_url || "").replace(/^backend\//, "");
-    const imageUrl = rawImagePath.startsWith("http")
-      ? rawImagePath
-      : `${FRONTEND_URL}/${rawImagePath}`;
-
-    Kakao.Share.sendDefault({
-      objectType: "feed",
-      content: {
-        title: `🎉 ${nickname}님의 이누야샤 닮은꼴 결과`,
-        description: `🥇 ${resultName} (${resultPercent}% 일치)\n\n나도 테스트해보기!`,
-        imageUrl: imageUrl,
-        link: {
-          mobileWebUrl: FRONTEND_URL,
-          webUrl: FRONTEND_URL
-        }
-      },
-      buttons: [
-        {
-          title: "나도 테스트하기",
-          link: {
-            mobileWebUrl: FRONTEND_URL,
-            webUrl: FRONTEND_URL
-          }
-        }
-      ]
-    });
+    await navigator.clipboard.writeText(shareUrl);
+    alert("공유 링크가 복사됐어요! 카톡에 붙여넣으면 결과 카드가 떠요.");
   });
 }

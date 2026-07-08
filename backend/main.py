@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from openai import OpenAI
 from dotenv import load_dotenv
+from fastapi.responses import HTMLResponse
 import pandas as pd
 import os
 import json
@@ -322,3 +323,44 @@ def match_character(req: MatchRequest):
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
+@app.get("/share", response_class=HTMLResponse)
+def share_result(name: str = "나", r1: str = "", r2: str = "", r3: str = "", img: str = ""):
+    title = f"🎉 {name}님의 이누야샤 닮은꼴 결과"
+    desc = f"🥇 {r1}  🥈 {r2}  🥉 {r3}"
+    frontend_url = "https://inuyasha-character-match-1.onrender.com"
+
+    image_url = img
+    if image_url and not image_url.startswith("http"):
+        image_url = frontend_url + "/" + image_url.lstrip("/")
+
+    if not image_url:
+        image_url = frontend_url + "/inuyasha.png"
+
+    return f"""
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{title}" />
+  <meta property="og:description" content="{desc}" />
+  <meta property="og:image" content="{image_url}" />
+  <meta property="og:url" content="{frontend_url}" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{title}" />
+  <meta name="twitter:description" content="{desc}" />
+  <meta name="twitter:image" content="{image_url}" />
+
+  <script>
+    location.href = "{frontend_url}";
+  </script>
+</head>
+<body>
+  <h1>{title}</h1>
+  <p>{desc}</p>
+  <a href="{frontend_url}">테스트하러 가기</a>
+</body>
+</html>
+"""
+    
