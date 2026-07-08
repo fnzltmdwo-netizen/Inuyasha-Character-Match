@@ -233,7 +233,16 @@ if (shareBtn) {
       return;
     }
 
-    const imagePath = latestResult?.image_url || "inuyasha.png";
+    let imagePath = latestResult?.image_url || "inuyasha.png";
+
+imagePath = String(imagePath)
+  .replace("http://127.0.0.1:8000/", "")
+  .replace("https://inuyasha-character-match.onrender.com/", "")
+  .replace(/^backend\//, "");
+
+const imageUrl = imagePath.startsWith("http")
+  ? imagePath
+  : `https://inuyasha-character-match-1.onrender.com/${imagePath}`;
 
     const shareUrl =
       `https://inuyasha-character-match.onrender.com/share` +
@@ -241,7 +250,7 @@ if (shareBtn) {
       `&r1=${encodeURIComponent(resultNames[0])}` +
       `&r2=${encodeURIComponent(resultNames[1])}` +
       `&r3=${encodeURIComponent(resultNames[2])}` +
-      `&img=${encodeURIComponent(imagePath)}`;
+      `&img=${encodeURIComponent(imageUrl)}`;
 
     await navigator.clipboard.writeText(shareUrl);
     alert("공유 링크가 복사됐어요! 카톡에 붙여넣으면 결과 카드가 떠요.");
