@@ -1,4 +1,4 @@
-const API_URL = "https://inuyasha-character-match.onrender.com";
+const API_URL = "https://inuyasha-character-match.onrender.com/match";
 
 const imageInput = document.getElementById("imageInput");
 const uploadArea = document.getElementById("uploadArea");
