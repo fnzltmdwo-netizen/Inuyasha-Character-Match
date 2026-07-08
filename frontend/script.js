@@ -1,9 +1,12 @@
 let latestResult = null;
+
 const API_URL = "https://inuyasha-character-match.onrender.com/match";
+const FRONTEND_URL = "https://inuyasha-character-match-1.onrender.com";
 const KAKAO_JS_KEY = "6836611108bd203324616c805a76abdf";
 
-Kakao.init(KAKAO_JS_KEY);
-
+if (window.Kakao && !Kakao.isInitialized()) {
+  Kakao.init(KAKAO_JS_KEY);
+}
 
 const imageInput = document.getElementById("imageInput");
 const uploadArea = document.getElementById("uploadArea");
@@ -16,6 +19,7 @@ const resultSection = document.getElementById("resultSection");
 const resultCards = document.getElementById("resultCards");
 const retryBtn = document.getElementById("retryBtn");
 const nicknameInput = document.getElementById("nicknameInput");
+const shareBtn = document.getElementById("shareBtn");
 
 let selectedBase64 = "";
 
@@ -36,11 +40,9 @@ imageInput.addEventListener("change", () => {
 
   reader.onload = () => {
     selectedBase64 = reader.result;
-
     previewImage.src = selectedBase64;
     previewImage.style.display = "block";
     emptyPreview.style.display = "none";
-
     analyzeBtn.disabled = false;
   };
 
@@ -56,9 +58,12 @@ analyzeBtn.addEventListener("click", async () => {
   loadingSection.classList.remove("hidden");
   resultSection.classList.add("hidden");
   resultCards.innerHTML = "";
-  
+
   analyzeBtn.disabled = true;
   analyzeBtn.querySelector("strong").innerText = "분석중...";
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 90000);
 
   try {
     const response = await fetch(API_URL, {
@@ -68,8 +73,11 @@ analyzeBtn.addEventListener("click", async () => {
       },
       body: JSON.stringify({
         image_base64: selectedBase64
-      })
+      }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error("API 요청 실패");
@@ -87,8 +95,14 @@ analyzeBtn.addEventListener("click", async () => {
     renderResults(results.slice(0, 3));
   } catch (error) {
     console.error(error);
-    alert("분석 실패 😭 백엔드가 켜져있는지 확인해줘!");
+
+    if (error.name === "AbortError") {
+      alert("분석 시간이 너무 오래 걸려요 😭 잠시 후 다시 시도해주세요!");
+    } else {
+      alert("분석 실패 😭 백엔드 상태를 확인해줘!");
+    }
   } finally {
+    clearTimeout(timeoutId);
     loadingSection.classList.add("hidden");
     analyzeBtn.disabled = false;
     analyzeBtn.querySelector("strong").innerText = "분석하기";
@@ -97,7 +111,7 @@ analyzeBtn.addEventListener("click", async () => {
 
 function renderResults(results) {
   resultCards.innerHTML = "";
-  latestResult = results[0];
+  latestResult = results[0] || null;
 
   results.forEach((item, index) => {
     const name = item.name || item.character || item.character_name || "이누야샤 캐릭터";
@@ -156,16 +170,13 @@ function renderResults(results) {
 
     resultCards.appendChild(card);
   });
-  
-  const title = resultSection.querySelector("h2");
 
+  const title = resultSection.querySelector("h2");
   const nickname = nicknameInput.value.trim();
 
-   if (nickname) {
-    title.innerText = `🎉 ${nickname}님의 이누야샤 캐릭터 TOP 3`;
-   } else {
-    title.innerText = "당신과 닮은 이누야샤 캐릭터 TOP 3";
-}
+  title.innerText = nickname
+    ? `🎉 ${nickname}님의 이누야샤 캐릭터 TOP 3`
+    : "당신과 닮은 이누야샤 캐릭터 TOP 3";
 
   resultSection.classList.remove("hidden");
   resultSection.scrollIntoView({
@@ -191,18 +202,9 @@ function getStars(percent) {
   return "★★★☆☆";
 }
 
-function formatPercent(value) {
-  if (typeof value === "number") {
-    if (value <= 1) return `${Math.round(value * 100)}%`;
-    return `${Math.round(value)}%`;
-  }
-
-  const text = String(value);
-  return text.includes("%") ? text : `${text}%`;
-}
-
 retryBtn.addEventListener("click", () => {
   selectedBase64 = "";
+  latestResult = null;
   imageInput.value = "";
 
   previewImage.src = "";
@@ -218,62 +220,48 @@ retryBtn.addEventListener("click", () => {
     behavior: "smooth"
   });
 });
-const shareBtn = document.getElementById("shareBtn");
 
 if (shareBtn) {
   shareBtn.addEventListener("click", () => {
-
     if (!latestResult) {
-        alert("먼저 테스트를 진행해주세요!");
-        return;
+      alert("먼저 테스트를 진행해주세요!");
+      return;
+    }
+
+    if (!window.Kakao || !Kakao.isInitialized()) {
+      alert("카카오 공유 준비가 안 됐어요!");
+      return;
     }
 
     const nickname = nicknameInput.value.trim() || "당신";
+    const resultName = latestResult.name || "이누야샤 캐릭터";
+    const resultPercent = getPercentNumber(latestResult.percent || 90);
+
+    const rawImagePath = String(latestResult.image_url || "").replace(/^backend\//, "");
+    const imageUrl = rawImagePath.startsWith("http")
+      ? rawImagePath
+      : `${FRONTEND_URL}/${rawImagePath}`;
 
     Kakao.Share.sendDefault({
-
-        objectType: "feed",
-
-        content: {
-
-            title: `🎉 ${nickname}님의 이누야샤 닮은꼴 결과`,
-
-            description:
-                `🥇 ${latestResult.name} (${latestResult.percent}% 일치)\n\n나도 테스트해보기!`,
-
-            imageUrl: `https://inuyasha-character-match-1.onrender.com/${String(latestResult.image_url).replace(/^backend\//, "")}`,
-
-            link: {
-
-                mobileWebUrl:
-                    "https://inuyasha-character-match-1.onrender.com",
-
-                webUrl:
-                    "https://inuyasha-character-match-1.onrender.com",
-
-            },
-
-        },
-
-        buttons: [
-
-            {
-
-                title: "나도 테스트하기",
-
-                link: {
-
-                    mobileWebUrl:
-                        "https://inuyasha-character-match-1.onrender.com",
-
-                    webUrl:
-                        "https://inuyasha-character-match-1.onrender.com",
-
-                },
-
-            },
-
-        ],
-
-      });
+      objectType: "feed",
+      content: {
+        title: `🎉 ${nickname}님의 이누야샤 닮은꼴 결과`,
+        description: `🥇 ${resultName} (${resultPercent}% 일치)\n\n나도 테스트해보기!`,
+        imageUrl: imageUrl,
+        link: {
+          mobileWebUrl: FRONTEND_URL,
+          webUrl: FRONTEND_URL
+        }
+      },
+      buttons: [
+        {
+          title: "나도 테스트하기",
+          link: {
+            mobileWebUrl: FRONTEND_URL,
+            webUrl: FRONTEND_URL
+          }
+        }
+      ]
+    });
+  });
 }
