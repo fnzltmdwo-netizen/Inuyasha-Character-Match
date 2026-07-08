@@ -353,9 +353,6 @@ def share_result(name: str = "나", r1: str = "", r2: str = "", r3: str = "", im
   <meta name="twitter:description" content="{desc}" />
   <meta name="twitter:image" content="{image_url}" />
 
-  <script>
-    location.href = "{frontend_url}";
-  </script>
 </head>
 <body>
   <h1>{title}</h1>
