@@ -18,7 +18,7 @@ body {
       rgba(255, 238, 210, 0.38),
       rgba(144, 17, 35, 0.62)
     ),
-    url("../inuyasha-bg.jpg") center top / cover no-repeat fixed;
+    url("../inuyasha.png")no-repeat fixed;
   overflow-x: hidden;
 }
 

@@ -56,8 +56,7 @@ analyzeBtn.addEventListener("click", async () => {
   loadingSection.classList.remove("hidden");
   resultSection.classList.add("hidden");
   resultCards.innerHTML = "";
-  latestResult = results[0];
-
+  
   analyzeBtn.disabled = true;
   analyzeBtn.querySelector("strong").innerText = "분석중...";
 
@@ -98,6 +97,7 @@ analyzeBtn.addEventListener("click", async () => {
 
 function renderResults(results) {
   resultCards.innerHTML = "";
+  latestResult = results[0];
 
   results.forEach((item, index) => {
     const name = item.name || item.character || item.character_name || "이누야샤 캐릭터";
@@ -220,7 +220,8 @@ retryBtn.addEventListener("click", () => {
 });
 const shareBtn = document.getElementById("shareBtn");
 
-shareBtn.addEventListener("click", () => {
+if (shareBtn) {
+  shareBtn.addEventListener("click", () => {
 
     if (!latestResult) {
         alert("먼저 테스트를 진행해주세요!");
@@ -240,8 +241,7 @@ shareBtn.addEventListener("click", () => {
             description:
                 `🥇 ${latestResult.name} (${latestResult.percent}% 일치)\n\n나도 테스트해보기!`,
 
-            imageUrl:
-                latestResult.image_url,
+            imageUrl: `https://inuyasha-character-match-1.onrender.com/${String(latestResult.image_url).replace(/^backend\//, "")}`,
 
             link: {
 
@@ -275,6 +275,5 @@ shareBtn.addEventListener("click", () => {
 
         ],
 
-    });
-
-});
+      });
+}
