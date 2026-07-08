@@ -4,7 +4,10 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from openai import OpenAI
 from dotenv import load_dotenv
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, Response
+from PIL import Image, ImageDraw, ImageFont
+from io import BytesIO
+import urllib.parse
 import pandas as pd
 import os
 import json
@@ -330,12 +333,16 @@ def share_result(name: str = "나", r1: str = "", r2: str = "", r3: str = "", im
     desc = f"🥇 {r1}  🥈 {r2}  🥉 {r3}"
     frontend_url = "https://inuyasha-character-match-1.onrender.com"
 
-    image_url = img
-    if image_url and not image_url.startswith("http"):
-        image_url = frontend_url + "/" + image_url.lstrip("/")
+    backend_url = "https://inuyasha-character-match.onrender.com"
 
-    if not image_url:
-        image_url = frontend_url + "/inuyasha.png"
+image_url = (
+    backend_url
+    + "/share-image"
+    + f"?name={urllib.parse.quote(name)}"
+    + f"&r1={urllib.parse.quote(r1)}"
+    + f"&r2={urllib.parse.quote(r2)}"
+    + f"&r3={urllib.parse.quote(r3)}"
+)
 
     return f"""
 <!DOCTYPE html>
@@ -361,4 +368,38 @@ def share_result(name: str = "나", r1: str = "", r2: str = "", r3: str = "", im
 </body>
 </html>
 """
+@app.get("/share-image")
+def share_image(name: str = "나", r1: str = "", r2: str = "", r3: str = ""):
+    W, H = 1200, 630
+
+    img = Image.new("RGB", (W, H), "#fff7ea")
+    draw = ImageDraw.Draw(img)
+
+    try:
+        font_title = ImageFont.truetype("arial.ttf", 58)
+        font_big = ImageFont.truetype("arial.ttf", 44)
+        font_mid = ImageFont.truetype("arial.ttf", 34)
+    except Exception:
+        font_title = ImageFont.load_default()
+        font_big = ImageFont.load_default()
+        font_mid = ImageFont.load_default()
+
+    draw.rectangle((0, 0, W, H), fill="#fff7ea")
+    draw.rectangle((0, 520, W, H), fill="#b83243")
+
+    title = f"{name}님의 이누야샤 닮은꼴 결과"
+    draw.text((70, 60), title, fill="#4a160f", font=font_title)
+
+    draw.text((90, 180), f"🥇 1위  {r1}", fill="#4a160f", font=font_big)
+    draw.text((90, 270), f"🥈 2위  {r2}", fill="#4a160f", font=font_big)
+    draw.text((90, 360), f"🥉 3위  {r3}", fill="#4a160f", font=font_big)
+
+    draw.text((70, 545), "이누야샤 닮은꼴 테스트", fill="white", font=font_mid)
+    draw.text((760, 545), "나도 테스트하기!", fill="white", font=font_mid)
+
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    buffer.seek(0)
+
+    return Response(content=buffer.getvalue(), media_type="image/png")
     
