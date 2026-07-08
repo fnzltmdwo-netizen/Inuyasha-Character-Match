@@ -1,0 +1,45 @@
+/* =========================
+   LOADING
+========================= */
+
+.loading {
+  width: min(620px, 92%);
+  margin: 34px auto;
+  padding: 34px;
+  text-align: center;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top, rgba(255, 231, 185, 0.38), transparent 42%),
+    rgba(255, 248, 235, 0.96);
+  border: 1px solid rgba(170, 79, 63, 0.35);
+  box-shadow:
+    0 20px 42px rgba(80, 30, 15, 0.18),
+    inset 0 0 24px rgba(255,255,255,0.7);
+}
+
+.loader {
+  width: 66px;
+  height: 66px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  border: 6px solid #ecd3bc;
+  border-top-color: #a51e2d;
+  border-right-color: #d7b26c;
+  animation: spin 0.85s linear infinite;
+  box-shadow:
+    0 0 18px rgba(165, 30, 45, 0.25),
+    inset 0 0 10px rgba(255,255,255,0.6);
+}
+
+.loading p {
+  margin: 0;
+  color: #7c2828;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

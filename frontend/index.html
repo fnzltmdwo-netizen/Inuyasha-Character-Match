@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>이누야샤 닮은꼴 테스트</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="css/upload.css" />
+  <link rel="stylesheet" href="css/steps.css" />
+  <link rel="stylesheet" href="css/result.css" />
+  <link rel="stylesheet" href="css/loading.css" />
+  <link rel="stylesheet" href="css/animation.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+
+<body>
+  <div class="sakura sakura1">✿</div>
+  <div class="sakura sakura2">❀</div>
+  <div class="sakura sakura3">✿</div>
+  <div class="sakura sakura4">❀</div>
+  <div class="sakura sakura5">✿</div>
+
+  <main class="page">
+
+    <header class="top">
+      <div class="brand">
+        <div class="brand-ko">이누야샤</div>
+        <div class="brand-en">INUYASHA CHARACTER MATCH</div>
+      </div>
+
+      <div class="top-badge">🐾 전국시대 닮은꼴 찾기</div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-label">◆ 이누야샤 등장인물 ◆</div>
+      <h1>닮은꼴 테스트</h1>
+      <p>
+        내 얼굴은 이누야샤 세계관에서 누구와 닮았을까?<br />
+        사진 한 장으로 AI가 가장 닮은 캐릭터 TOP 3를 찾아줘요.
+      </p>
+    </section>
+
+    <section class="main-panel">
+      <div class="panel-pattern"></div>
+
+      <div class="upload-card" id="uploadArea">
+        <input type="file" id="imageInput" accept="image/*" hidden />
+
+        <div class="upload-cloud">☁</div>
+        <h3>사진을 업로드 해주세요</h3>
+        <p>JPG, PNG 파일 지원</p>
+        <button type="button" id="selectBtn">사진 선택하기</button>
+      </div>
+
+      <div class="or-line">
+        <span>또는</span>
+      </div>
+
+      <div class="preview-card">
+        <div id="emptyPreview" class="empty-preview">
+          <div class="face-icon"></div>
+          <p>미리보기</p>
+        </div>
+        <img id="previewImage" class="preview-image" alt="미리보기" />
+      </div>
+
+      <button id="analyzeBtn" class="analyze-btn" disabled>
+        <strong>분석하기</strong>
+        <span>사혼의 구슬을 찾는 중...</span>
+      </button>
+
+      <div class="sword"></div>
+      <p class="tip">🐾 정면 얼굴 사진일수록 결과가 더 정확해요!</p>
+    </section>
+
+    <section class="steps-panel">
+      <h2>분석은 이렇게 진행돼요!</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon">😊</div>
+          <b>1. 얼굴 분석</b>
+          <p>AI가 얼굴 분위기를 분석해요</p>
+        </div>
+
+        <div class="arrow">▶</div>
+
+        <div class="step">
+          <div class="step-icon">📜</div>
+          <b>2. 후보 추출</b>
+          <p>35명 캐릭터 중 후보를 뽑아요</p>
+        </div>
+
+        <div class="arrow">▶</div>
+
+        <div class="step">
+          <div class="step-icon">💎</div>
+          <b>3. TOP 3 선정</b>
+          <p>가장 닮은 캐릭터를 골라요</p>
+        </div>
+
+        <div class="arrow">▶</div>
+
+        <div class="step">
+          <div class="step-icon">🗺️</div>
+          <b>4. 결과 확인</b>
+          <p>닮은 이유도 알려줘요</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="loadingSection" class="loading hidden">
+      <div class="loader"></div>
+      <p>요괴의 기운을 분석하는 중...</p>
+    </section>
+
+    <section id="resultSection" class="result-section hidden">
+      <h2>당신과 닮은 이누야샤 캐릭터 TOP 3</h2>
+      <div id="resultCards" class="result-cards"></div>
+      <button id="retryBtn" class="retry-btn">다시 테스트하기</button>
+    </section>
+
+    <footer>
+      © Inuyasha Character Match Fan Project
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1200px) {
+
+  .main-panel {
+    grid-template-columns: 1fr;
+    padding: 30px 24px 42px;
+    gap: 22px;
+  }
+
+  .or-line {
+    height: 42px;
+  }
+
+  .or-line::before {
+    width: 100%;
+    height: 1px;
+  }
+
+  .tip {
+    position: static;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .sword {
+    display: none;
+  }
+
+  .analyze-btn {
+    width: 100%;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .arrow {
+    transform: rotate(90deg);
+    margin: 8px 0;
+  }
+
+  .result-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+
+  .page {
+    padding: 22px 16px 30px;
+  }
+
+  .top {
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
+  }
+
+  .brand-ko {
+    font-size: 42px;
+    letter-spacing: -3px;
+  }
+
+  .brand-en {
+    font-size: 10px;
+    letter-spacing: 3px;
+  }
+
+  .hero h1 {
+    font-size: 54px;
+    letter-spacing: -4px;
+  }
+
+  .hero p {
+    font-size: 17px;
+  }
+
+  .main-panel {
+    margin-top: 26px;
+  }
+
+  .upload-card,
+  .preview-card {
+    min-height: 220px;
+  }
+
+  #selectBtn {
+    width: 100%;
+  }
+
+  .steps-panel {
+    padding: 24px 18px;
+  }
+
+  .step {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .step-icon {
+    margin: 0 auto 12px;
+  }
+
+  .result-section {
+    padding: 24px 18px;
+  }
+
+  .result-section h2 {
+    font-size: 28px;
+  }
+
+  .result-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .result-content h3 {
+    font-size: 24px;
+  }
+
+  .retry-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .brand-ko {
+    font-size: 34px;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  .hero-label {
+    font-size: 18px;
+  }
+
+  .hero p {
+    font-size: 15px;
+  }
+
+  .top-badge {
+    font-size: 12px;
+    padding: 10px 14px;
+  }
+
+  .upload-cloud {
+    font-size: 44px;
+  }
+
+  .upload-card h3 {
+    font-size: 18px;
+  }
+
+  .result-image-wrap {
+    height: 210px;
+  }
+}

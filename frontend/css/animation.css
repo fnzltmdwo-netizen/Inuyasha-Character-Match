@@ -1,0 +1,190 @@
+/* =========================
+   GLOBAL ANIMATIONS
+========================= */
+
+/* 벚꽃 */
+.sakura {
+  position: fixed;
+  top: -60px;
+  z-index: 20;
+  pointer-events: none;
+  color: rgba(255, 210, 220, 0.9);
+  text-shadow: 0 4px 10px rgba(150, 30, 45, 0.25);
+  animation-name: sakuraFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.sakura1 {
+  left: 6%;
+  font-size: 28px;
+  animation-duration: 10s;
+  animation-delay: 0s;
+}
+
+.sakura2 {
+  left: 22%;
+  font-size: 20px;
+  animation-duration: 13s;
+  animation-delay: 2s;
+}
+
+.sakura3 {
+  left: 47%;
+  font-size: 26px;
+  animation-duration: 12s;
+  animation-delay: 4s;
+}
+
+.sakura4 {
+  left: 72%;
+  font-size: 22px;
+  animation-duration: 15s;
+  animation-delay: 1s;
+}
+
+.sakura5 {
+  left: 91%;
+  font-size: 30px;
+  animation-duration: 11s;
+  animation-delay: 5s;
+}
+
+@keyframes sakuraFall {
+  0% {
+    transform: translateY(-80px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(55vh) translateX(40px) rotate(180deg);
+  }
+
+  100% {
+    transform: translateY(110vh) translateX(-30px) rotate(360deg);
+    opacity: 0.15;
+  }
+}
+
+/* 버튼 반짝임 */
+.analyze-btn::after,
+#selectBtn::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  left: -40%;
+  width: 35%;
+  height: 220%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.45),
+    transparent
+  );
+  transform: rotate(25deg);
+  animation: shine 3.2s infinite;
+}
+
+#selectBtn {
+  position: relative;
+  overflow: hidden;
+}
+
+.analyze-btn {
+  overflow: hidden;
+}
+
+@keyframes shine {
+  0% {
+    left: -55%;
+  }
+
+  45% {
+    left: 125%;
+  }
+
+  100% {
+    left: 125%;
+  }
+}
+
+/* 칼 반짝임 */
+.sword::after {
+  content: "";
+  position: absolute;
+  top: 28px;
+  left: 5px;
+  width: 4px;
+  height: 95px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.72);
+  filter: blur(1px);
+  animation: swordGlow 2.4s ease-in-out infinite;
+}
+
+@keyframes swordGlow {
+  0%, 100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 패널 살짝 떠있는 느낌 */
+.main-panel,
+.steps-panel,
+.result-section {
+  animation: softRise 0.7s ease both;
+}
+
+@keyframes softRise {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 로고 은은한 빛 */
+.brand-ko {
+  animation: logoGlow 3s ease-in-out infinite;
+}
+
+@keyframes logoGlow {
+  0%, 100% {
+    text-shadow:
+      0 3px 0 rgba(255,255,255,0.75),
+      0 10px 22px rgba(105,31,20,.18);
+  }
+
+  50% {
+    text-shadow:
+      0 3px 0 rgba(255,255,255,0.85),
+      0 0 22px rgba(180, 40, 55, 0.38);
+  }
+}
+
+/* 업로드 박스 구름 둥둥 */
+.upload-cloud {
+  animation: cloudFloat 2.5s ease-in-out infinite;
+}
+
+@keyframes cloudFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}

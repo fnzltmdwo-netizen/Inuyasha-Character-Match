@@ -1,0 +1,77 @@
+/* =========================
+   HERO
+========================= */
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.brand-ko {
+  font-size: 58px;
+  font-weight: 900;
+  color: #a51e2d;
+  letter-spacing: -5px;
+  line-height: 1;
+  text-shadow:
+    0 3px 0 rgba(255,255,255,0.75),
+    0 10px 22px rgba(105,31,20,.18);
+}
+
+.brand-en {
+  margin-top: 8px;
+  font-family: "Cinzel", serif;
+  font-size: 13px;
+  letter-spacing: 5px;
+  color: #a51e2d;
+  font-weight: 900;
+}
+
+.top-badge {
+  padding: 14px 24px;
+  border-radius: 999px;
+  background: rgba(255,249,236,.95);
+  border: 1px solid rgba(170,79,63,.25);
+  color: #a51e2d;
+  font-weight: 900;
+  box-shadow: 0 10px 22px rgba(80,30,15,.16);
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 42px;
+}
+
+.hero-label {
+  font-size: 22px;
+  font-weight: 900;
+  color: #5a3020;
+  letter-spacing: 2px;
+}
+
+.hero h1 {
+  margin: 10px 0 16px;
+  font-size: clamp(58px, 7vw, 90px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -6px;
+  color: #3c0d09;
+  text-shadow:
+    0 5px 0 rgba(255,255,255,.8),
+    0 14px 28px rgba(70,20,12,.25);
+}
+
+.hero p {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.6;
+  font-weight: 700;
+  color: #5c3a2a;
+  text-shadow: 0 2px 0 rgba(255,255,255,.35);
+}
+
+.hero p b {
+  color: #b21f34;
+}
