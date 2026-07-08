@@ -1,19 +1,18 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from openai import OpenAI
 from dotenv import load_dotenv
-from fastapi.responses import HTMLResponse, Response
-from PIL import Image, ImageDraw, ImageFont
-from io import BytesIO
-import urllib.parse
 import pandas as pd
 import os
 import json
 import re
+import urllib.parse
 
 from matcher import find_top20
+from share_image import make_share_image
 
 load_dotenv()
 
@@ -33,6 +32,9 @@ if os.path.exists("images"):
     app.mount("/images", StaticFiles(directory="images"), name="images")
 
 CSV_PATH = "inuyasha_ai.csv"
+
+FRONTEND_URL = "https://inuyasha-character-match-1.onrender.com"
+BACKEND_URL = "https://inuyasha-character-match.onrender.com"
 
 
 class MatchRequest(BaseModel):
@@ -66,12 +68,15 @@ def make_image_url(image_path):
 
     image_path = str(image_path).replace("\\", "/")
 
+    image_path = image_path.replace("http://127.0.0.1:8000/", "")
+    image_path = image_path.replace(BACKEND_URL + "/", "")
+    image_path = image_path.replace("backend/", "")
+
     if image_path.startswith("http"):
-        image_path = image_path.replace("http://127.0.0.1:8000/", "")
-        image_path = image_path.replace("https://inuyasha-character-match.onrender.com/", "")
+        return image_path
 
     if image_path.startswith("images/"):
-        return "https://inuyasha-character-match-1.onrender.com/" + image_path
+        return FRONTEND_URL + "/" + image_path
 
     return image_path
 
@@ -327,22 +332,21 @@ def match_character(req: MatchRequest):
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.get("/share", response_class=HTMLResponse)
-def share_result(name: str = "나", r1: str = "", r2: str = "", r3: str = "", img: str = ""):
-    title = f"🎉 {name}님의 이누야샤 닮은꼴 결과"
+def share_result(name: str = "나", r1: str = "", r2: str = "", r3: str = ""):
+    title = f"🎉 {name}님의 이누야샤 닮은꼴 결과!"
     desc = f"🥇 {r1}  🥈 {r2}  🥉 {r3}"
-    frontend_url = "https://inuyasha-character-match-1.onrender.com"
 
-    backend_url = "https://inuyasha-character-match.onrender.com"
-
-image_url = (
-    backend_url
-    + "/share-image"
-    + f"?name={urllib.parse.quote(name)}"
-    + f"&r1={urllib.parse.quote(r1)}"
-    + f"&r2={urllib.parse.quote(r2)}"
-    + f"&r3={urllib.parse.quote(r3)}"
-)
+    image_url = (
+        BACKEND_URL
+        + "/share-image"
+        + f"?name={urllib.parse.quote(name)}"
+        + f"&r1={urllib.parse.quote(r1)}"
+        + f"&r2={urllib.parse.quote(r2)}"
+        + f"&r3={urllib.parse.quote(r3)}"
+    )
 
     return f"""
 <!DOCTYPE html>
@@ -353,53 +357,24 @@ image_url = (
   <meta property="og:title" content="{title}" />
   <meta property="og:description" content="{desc}" />
   <meta property="og:image" content="{image_url}" />
-  <meta property="og:url" content="{frontend_url}" />
+  <meta property="og:url" content="{FRONTEND_URL}" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{title}" />
   <meta name="twitter:description" content="{desc}" />
   <meta name="twitter:image" content="{image_url}" />
 
+  <title>{title}</title>
 </head>
 <body>
   <h1>{title}</h1>
   <p>{desc}</p>
-  <a href="{frontend_url}">테스트하러 가기</a>
+  <a href="{FRONTEND_URL}">테스트하러 가기</a>
 </body>
 </html>
 """
+
+
 @app.get("/share-image")
 def share_image(name: str = "나", r1: str = "", r2: str = "", r3: str = ""):
-    W, H = 1200, 630
-
-    img = Image.new("RGB", (W, H), "#fff7ea")
-    draw = ImageDraw.Draw(img)
-
-    try:
-        font_title = ImageFont.truetype("arial.ttf", 58)
-        font_big = ImageFont.truetype("arial.ttf", 44)
-        font_mid = ImageFont.truetype("arial.ttf", 34)
-    except Exception:
-        font_title = ImageFont.load_default()
-        font_big = ImageFont.load_default()
-        font_mid = ImageFont.load_default()
-
-    draw.rectangle((0, 0, W, H), fill="#fff7ea")
-    draw.rectangle((0, 520, W, H), fill="#b83243")
-
-    title = f"{name}님의 이누야샤 닮은꼴 결과"
-    draw.text((70, 60), title, fill="#4a160f", font=font_title)
-
-    draw.text((90, 180), f"🥇 1위  {r1}", fill="#4a160f", font=font_big)
-    draw.text((90, 270), f"🥈 2위  {r2}", fill="#4a160f", font=font_big)
-    draw.text((90, 360), f"🥉 3위  {r3}", fill="#4a160f", font=font_big)
-
-    draw.text((70, 545), "이누야샤 닮은꼴 테스트", fill="white", font=font_mid)
-    draw.text((760, 545), "나도 테스트하기!", fill="white", font=font_mid)
-
-    buffer = BytesIO()
-    img.save(buffer, format="PNG")
-    buffer.seek(0)
-
-    return Response(content=buffer.getvalue(), media_type="image/png")
-    
+    return make_share_image(name=name, r1=r1, r2=r2, r3=r3)

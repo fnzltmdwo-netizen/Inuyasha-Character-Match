@@ -226,23 +226,21 @@ if (shareBtn) {
     const nickname = nicknameInput.value.trim() || "나";
 
     const resultNames = [...document.querySelectorAll(".result-card h3")]
-      .map((el, index) => `${index + 1}위 ${el.innerText}`)
-      .join("\n");
+      .map((el) => el.innerText);
 
-    if (!resultNames) {
+    if (resultNames.length < 3) {
       alert("먼저 테스트를 진행해주세요!");
       return;
     }
 
-    const text =
-`🎉 ${nickname}의 이누야샤 닮은꼴 결과!
+    const shareUrl =
+      `https://inuyasha-character-match.onrender.com/share` +
+      `?name=${encodeURIComponent(nickname)}` +
+      `&r1=${encodeURIComponent(resultNames[0])}` +
+      `&r2=${encodeURIComponent(resultNames[1])}` +
+      `&r3=${encodeURIComponent(resultNames[2])}`;
 
-${resultNames}
-
-나도 테스트하기 👇
-${FRONTEND_URL}`;
-
-    await navigator.clipboard.writeText(text);
-    alert("결과가 복사됐어요! 카톡에 붙여넣기 하면 돼요.");
+    await navigator.clipboard.writeText(shareUrl);
+    alert("공유 링크가 복사됐어요! 카톡에 붙여넣으면 결과 카드가 떠요.");
   });
 }
