@@ -226,33 +226,23 @@ if (shareBtn) {
     const nickname = nicknameInput.value.trim() || "나";
 
     const resultNames = [...document.querySelectorAll(".result-card h3")]
-      .map((el) => el.innerText);
+      .map((el, index) => `${index + 1}위 ${el.innerText}`)
+      .join("\n");
 
-    if (resultNames.length < 3 || !latestResult) {
+    if (!resultNames) {
       alert("먼저 테스트를 진행해주세요!");
       return;
     }
 
-    let imagePath = latestResult.image_url || "inuyasha.png";
+    const text =
+`🎉 ${nickname}의 이누야샤 닮은꼴 결과!
 
-    imagePath = String(imagePath)
-      .replace("http://127.0.0.1:8000/", "")
-      .replace("https://inuyasha-character-match.onrender.com/", "")
-      .replace(/^backend\//, "");
+${resultNames}
 
-    const imageUrl = imagePath.startsWith("http")
-      ? imagePath
-      : `${FRONTEND_URL}/${imagePath}`;
+나도 테스트하기 👇
+${FRONTEND_URL}`;
 
-    const shareUrl =
-      `https://inuyasha-character-match.onrender.com/share` +
-      `?name=${encodeURIComponent(nickname)}` +
-      `&r1=${encodeURIComponent(resultNames[0])}` +
-      `&r2=${encodeURIComponent(resultNames[1])}` +
-      `&r3=${encodeURIComponent(resultNames[2])}` +
-      `&img=${encodeURIComponent(imageUrl)}`;
-
-    await navigator.clipboard.writeText(shareUrl);
-    alert("공유 링크가 복사됐어요! 카톡에 붙여넣으면 결과 카드가 떠요.");
+    await navigator.clipboard.writeText(text);
+    alert("결과가 복사됐어요! 카톡에 붙여넣기 하면 돼요.");
   });
 }
