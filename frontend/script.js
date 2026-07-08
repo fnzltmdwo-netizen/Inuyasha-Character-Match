@@ -228,21 +228,21 @@ if (shareBtn) {
     const resultNames = [...document.querySelectorAll(".result-card h3")]
       .map((el) => el.innerText);
 
-    if (resultNames.length < 3) {
+    if (resultNames.length < 3 || !latestResult) {
       alert("먼저 테스트를 진행해주세요!");
       return;
     }
 
-    let imagePath = latestResult?.image_url || "inuyasha.png";
+    let imagePath = latestResult.image_url || "inuyasha.png";
 
-imagePath = String(imagePath)
-  .replace("http://127.0.0.1:8000/", "")
-  .replace("https://inuyasha-character-match.onrender.com/", "")
-  .replace(/^backend\//, "");
+    imagePath = String(imagePath)
+      .replace("http://127.0.0.1:8000/", "")
+      .replace("https://inuyasha-character-match.onrender.com/", "")
+      .replace(/^backend\//, "");
 
-const imageUrl = imagePath.startsWith("http")
-  ? imagePath
-  : `https://inuyasha-character-match-1.onrender.com/${imagePath}`;
+    const imageUrl = imagePath.startsWith("http")
+      ? imagePath
+      : `${FRONTEND_URL}/${imagePath}`;
 
     const shareUrl =
       `https://inuyasha-character-match.onrender.com/share` +

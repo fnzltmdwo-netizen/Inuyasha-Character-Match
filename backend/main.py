@@ -64,10 +64,11 @@ def make_image_url(image_path):
     image_path = str(image_path).replace("\\", "/")
 
     if image_path.startswith("http"):
-        return image_path
+        image_path = image_path.replace("http://127.0.0.1:8000/", "")
+        image_path = image_path.replace("https://inuyasha-character-match.onrender.com/", "")
 
     if image_path.startswith("images/"):
-        return "http://127.0.0.1:8000/" + image_path
+        return "https://inuyasha-character-match-1.onrender.com/" + image_path
 
     return image_path
 
